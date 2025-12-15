@@ -24,6 +24,7 @@ const config: Config = {
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'wiggle': 'wiggle 1s ease-in-out infinite',
+        'marquee': 'marquee 25s linear infinite',
       },
       keyframes: {
         float: {
@@ -33,6 +34,10 @@ const config: Config = {
         wiggle: {
           '0%, 100%': { transform: 'rotate(-3deg)' },
           '50%': { transform: 'rotate(3deg)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
         }
       }
     },

@@ -2,8 +2,55 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Copy, Check, ExternalLink, Heart, Dog, Zap, Menu, X, Rocket, Shield, Star } from "lucide-react";
+import { Copy, Check, Heart, Dog, Zap, Menu, X, Rocket, Shield, Star, Bone, PawPrint } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import clsx from "clsx";
+
+// --- Components ---
+
+const WavyDivider = ({ className, flip = false }: { className?: string; flip?: boolean }) => (
+  <div className={clsx("w-full leading-[0] z-20 relative", className)}>
+    <svg
+      viewBox="0 0 1200 120"
+      preserveAspectRatio="none"
+      className={clsx("relative block w-full h-[60px] sm:h-[100px]", flip ? "transform rotate-180" : "")}
+    >
+      <path
+        d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+        className="fill-current"
+      ></path>
+    </svg>
+  </div>
+);
+
+const Marquee = () => (
+  <div className="bg-brand-yellow text-brand-darkTeal py-3 overflow-hidden border-y-4 border-brand-darkTeal relative z-30 transform -rotate-1">
+    <div className="whitespace-nowrap animate-marquee flex gap-8 items-center font-black text-xl uppercase tracking-widest">
+      {[...Array(10)].map((_, i) => (
+        <span key={i} className="flex items-center gap-4">
+          DO ONLY GOOD EVERYDAY <PawPrint size={20} /> $PETS <Bone size={20} />
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
+const NavButton = ({ href, children, mobile = false, onClick }: any) => (
+  <a
+    href={href}
+    onClick={onClick}
+    className={clsx(
+      "font-black tracking-wide transition-all duration-300",
+      mobile
+        ? "text-2xl hover:text-brand-yellow"
+        : "text-lg text-white hover:text-brand-yellow hover:scale-110"
+    )}
+  >
+    {children}
+  </a>
+);
+
+// --- Main Page ---
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -17,403 +64,231 @@ export default function Home() {
   };
 
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, type: "spring", bounce: 0.4 } }
-  };
-
-  const staggerContainer: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, type: "spring", bounce: 0.5 } }
   };
 
   return (
-    <main className="min-h-screen text-white overflow-x-hidden selection:bg-brand-yellow selection:text-brand-darkTeal font-display">
+    <main className="min-h-screen bg-brand-teal text-white overflow-x-hidden font-display selection:bg-brand-yellow selection:text-black">
       
-      {/* Background Stars (Static CSS/SVG Pattern could be better, but simple divs work for now) */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0.3, scale: 0.5 }}
-            animate={{ 
-              opacity: [0.3, 0.8, 0.3], 
-              scale: [0.8, 1.2, 0.8],
-              y: [0, -20, 0]
-            }}
-            transition={{ 
-              duration: 3 + Math.random() * 2, 
-              repeat: Infinity,
-              delay: Math.random() * 2 
-            }}
-            className="absolute text-brand-yellow"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-          >
-            <Star fill="currentColor" size={20 + Math.random() * 30} />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-brand-teal/90 backdrop-blur-md border-b border-white/10 shadow-lg">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2 font-display text-2xl font-black text-white drop-shadow-md">
-            <span className="text-3xl animate-bounce">🐾</span> 
-            <span className="text-brand-yellow drop-shadow-[0_2px_0_rgba(180,83,9,1)] stroke-black">PetsOnDoge</span>
-          </div>
-          
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8 text-lg font-bold text-white/90">
-            <a href="#about" className="hover:text-brand-yellow transition hover:scale-110 inline-block">About</a>
-            <a href="#tokenomics" className="hover:text-brand-yellow transition hover:scale-110 inline-block">Tokenomics</a>
-            <a href="#roadmap" className="hover:text-brand-yellow transition hover:scale-110 inline-block">Roadmap</a>
-            <a href="#gallery" className="hover:text-brand-yellow transition hover:scale-110 inline-block">Gallery</a>
+      {/* Navbar */}
+      <nav className="fixed w-full z-50 px-4 py-4 top-0">
+        <div className="bg-brand-darkTeal/90 backdrop-blur-md rounded-full border-4 border-white/20 shadow-xl container mx-auto px-6 py-3 flex justify-between items-center max-w-6xl">
+          <div className="flex items-center gap-2">
+            <div className="bg-brand-yellow p-1.5 rounded-full border-2 border-white shadow-sm">
+                <span className="text-2xl">🐶</span>
+            </div>
+            <span className="text-2xl font-black tracking-tight text-white drop-shadow-md">PetsOnDoge</span>
           </div>
 
-          <div className="hidden md:flex gap-4">
-             <a href="https://anoncoin.it/pets" target="_blank" className="px-6 py-3 bg-brand-yellow text-brand-darkTeal font-black rounded-full hover:bg-white transition hover:scale-105 shadow-[0_4px_0_rgba(180,83,9,0.3)] hover:shadow-[0_2px_0_rgba(180,83,9,0.3)] translate-y-0 hover:translate-y-[2px]">
-               BUY $PETS
-             </a>
+          <div className="hidden md:flex gap-8 items-center">
+            <NavButton href="#about">About</NavButton>
+            <NavButton href="#tokenomics">Tokenomics</NavButton>
+            <NavButton href="#how-to-buy">How to Buy</NavButton>
+            <a href="https://anoncoin.it/pets" target="_blank" className="bg-brand-yellow text-brand-darkTeal px-6 py-2.5 rounded-full font-black border-b-4 border-brand-orange hover:border-b-0 hover:translate-y-1 transition-all shadow-lg hover:shadow-md">
+              BUY NOW
+            </a>
           </div>
 
-          {/* Mobile Menu Button */}
           <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-brand-darkTeal border-b border-white/10"
-            >
-              <div className="flex flex-col p-6 gap-6 font-bold text-center text-xl">
-                <a href="#about" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-yellow">About</a>
-                <a href="#tokenomics" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-yellow">Tokenomics</a>
-                <a href="#roadmap" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-yellow">Roadmap</a>
-                <a href="#gallery" onClick={() => setMobileMenuOpen(false)} className="hover:text-brand-yellow">Gallery</a>
-                <a href="https://anoncoin.it/pets" target="_blank" className="bg-brand-yellow text-brand-darkTeal py-3 rounded-xl mx-12 shadow-[0_4px_0_rgba(180,83,9,0.3)]">BUY NOW</a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </nav>
 
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-brand-teal pt-24 px-6 flex flex-col gap-8 items-center md:hidden"
+          >
+            <NavButton mobile href="#about" onClick={() => setMobileMenuOpen(false)}>About</NavButton>
+            <NavButton mobile href="#tokenomics" onClick={() => setMobileMenuOpen(false)}>Tokenomics</NavButton>
+            <NavButton mobile href="#how-to-buy" onClick={() => setMobileMenuOpen(false)}>How to Buy</NavButton>
+            <a href="https://anoncoin.it/pets" className="bg-brand-yellow text-brand-darkTeal w-full py-4 rounded-xl font-black text-center text-xl shadow-xl">BUY NOW</a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6 flex flex-col items-center text-center z-10">
-        
+      <header className="relative pt-40 pb-32 px-6 flex flex-col items-center text-center overflow-hidden bg-brand-teal">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute top-20 left-10 text-white animate-bounce duration-[3s]"><Bone size={60} /></div>
+            <div className="absolute bottom-40 right-20 text-brand-yellow animate-bounce duration-[4s] delay-100"><PawPrint size={80} /></div>
+        </div>
+
         <motion.div 
-          initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
-          animate={{ scale: 1, opacity: 1, rotate: 0 }}
-          transition={{ duration: 0.8, type: "spring", bounce: 0.5 }}
-          className="relative w-64 h-64 sm:w-80 sm:h-80 mb-8 animate-float"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="relative w-64 h-64 sm:w-80 sm:h-80 mb-6 z-10"
         >
-          {/* Logo Container with 'Pop' effect */}
-          <div className="absolute inset-0 bg-brand-yellow rounded-full scale-105 blur-sm opacity-50" />
-          <Image src="/logo.jpg" alt="PetsOnDoge Logo" fill className="object-cover rounded-full border-8 border-white shadow-2xl" priority />
+            <div className="absolute inset-0 bg-brand-yellow rounded-full scale-110 border-8 border-white/30 animate-pulse" />
+            <Image src="/logo.jpg" alt="Logo" fill className="object-cover rounded-full border-[12px] border-white shadow-2xl relative z-10" priority />
+            <div className="absolute -bottom-6 -right-6 bg-brand-orange text-white px-6 py-2 rounded-full font-black text-xl border-4 border-white shadow-lg rotate-12 z-20">
+                Hi! 👋
+            </div>
         </motion.div>
 
         <motion.h1 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-6xl sm:text-8xl font-black mb-4 text-brand-yellow drop-shadow-[0_6px_0_rgba(180,83,9,1)] tracking-tight stroke-text"
-          style={{ WebkitTextStroke: '2px #B45309' }}
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-6xl sm:text-9xl font-black text-brand-yellow drop-shadow-[0_8px_0_rgba(22,99,102,1)] tracking-tight relative z-10 stroke-text"
+            style={{ WebkitTextStroke: "3px #166366" }}
         >
-          PetsOnDoge
+            PetsOnDoge
         </motion.h1>
         
         <motion.p 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="text-2xl sm:text-3xl text-white font-bold max-w-2xl mb-8 drop-shadow-md"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-2xl sm:text-4xl font-bold text-white mt-4 mb-10 max-w-3xl drop-shadow-md"
         >
-          All Pets Need <span className="text-brand-yellow underline decoration-wavy decoration-2">$PETS</span> 🐾
+            The <span className="text-brand-yellow underline decoration-wavy decoration-4">goodest</span> coin on Solana. 
+            Helping shelter pets find homes! 🏡
         </motion.p>
 
-        {/* CA Box */}
         <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          onClick={copyToClipboard}
-          className="cursor-pointer group relative flex flex-wrap justify-center items-center gap-3 bg-white/10 backdrop-blur-md border-2 border-white/30 px-6 py-4 rounded-2xl hover:bg-white/20 transition mb-12 max-w-[95vw] shadow-lg"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-col sm:flex-row gap-4 w-full justify-center z-10"
         >
-          <span className="text-brand-yellow font-black text-lg">CA:</span>
-          <code className="text-sm sm:text-lg text-white font-mono break-all sm:break-normal font-bold">
-            {CA}
-          </code>
-          <div className="text-white group-hover:scale-110 transition p-2 bg-brand-yellow/20 rounded-lg">
-            {copied ? <Check size={20} className="text-green-300" /> : <Copy size={20} />}
-          </div>
-          {copied && (
-            <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-lg animate-bounce">
-              Copied!
-            </span>
-          )}
+            <div onClick={copyToClipboard} className="cursor-pointer bg-white text-brand-darkTeal px-6 py-4 rounded-2xl font-mono font-bold border-b-8 border-gray-200 active:border-b-0 active:translate-y-2 transition-all flex items-center gap-3 shadow-xl group">
+                <span className="text-sm sm:text-base">{CA.slice(0, 6)}...{CA.slice(-6)}</span>
+                <div className="bg-brand-teal/10 p-2 rounded-lg group-hover:bg-brand-yellow transition-colors">
+                    {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
+                </div>
+            </div>
+            
+            <a href="https://anoncoin.it/pets" target="_blank" className="bg-brand-orange text-white px-8 py-4 rounded-2xl font-black text-xl border-b-8 border-[#c25e00] active:border-b-0 active:translate-y-2 transition-all shadow-xl flex items-center justify-center gap-2 hover:brightness-110">
+                <Rocket size={24} /> BUY NOW
+            </a>
         </motion.div>
+      </header>
 
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
-        >
-          <a href="https://anoncoin.it/pets" target="_blank" className="flex items-center justify-center gap-3 px-8 py-4 bg-brand-yellow text-brand-darkTeal font-black text-xl rounded-2xl hover:bg-white transition hover:-translate-y-1 shadow-[0_6px_0_rgba(180,83,9,0.4)] active:shadow-none active:translate-y-1">
-            <Rocket size={28} /> BUY NOW
-          </a>
-          <a href="https://dexscreener.com/solana/HF9GHYi2a5fh9gCQLgzRg4PLyBnJTBs9uMhUXJvSdoge" target="_blank" className="flex items-center justify-center gap-3 px-8 py-4 bg-white text-brand-darkTeal font-black text-xl rounded-2xl hover:bg-gray-100 transition hover:-translate-y-1 shadow-[0_6px_0_rgba(0,0,0,0.2)] active:shadow-none active:translate-y-1">
-            <Zap size={28} /> CHART
-          </a>
-        </motion.div>
-      </section>
+      <Marquee />
 
       {/* About Section */}
-      <section id="about" className="py-24 relative z-10">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl sm:text-6xl font-black mb-8 text-white drop-shadow-lg">
-              <span className="text-brand-yellow">Do Only Good</span> Everyday
-            </h2>
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border-2 border-white/20">
-              <p className="text-xl sm:text-2xl text-white font-medium leading-relaxed max-w-3xl mx-auto">
-                PetsOnDoge is a family crypto dedicated to funding food, care, and adoptions to bring hope and homes to every shelter pet. 
-                <br/><br/>
-                We are the <span className="text-brand-yellow font-black">goodest boys</span> of crypto! 🐶
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {[
-              { icon: Heart, color: "text-red-400", title: "Charity", desc: "Supporting shelters and animal welfare." },
-              { icon: Dog, color: "text-brand-yellow", title: "Community", desc: "Strong Doge family bringing memes to life." },
-              { icon: Shield, color: "text-blue-300", title: "Safe", desc: "Secure on Solana. Transparent and fair." }
-            ].map((item, i) => (
-              <motion.div key={i} variants={fadeInUp} className="p-8 bg-brand-darkTeal/50 backdrop-blur-md rounded-3xl border-2 border-white/10 hover:border-brand-yellow transition hover:-translate-y-2 shadow-xl">
-                <div className={`w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mb-6 ${item.color} mx-auto`}>
-                  <item.icon size={40} strokeWidth={3} />
-                </div>
-                <h3 className="text-2xl font-black mb-3 text-center">{item.title}</h3>
-                <p className="text-gray-200 text-center text-lg">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Tokenomics Section */}
-      <section id="tokenomics" className="py-24 relative overflow-hidden z-10 bg-brand-darkTeal/30">
-        <div className="container mx-auto px-6 max-w-4xl relative">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl sm:text-6xl font-black mb-6 text-white drop-shadow-md">Tokenomics</h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section id="about" className="relative bg-[#166366] py-24">
+        <div className="container mx-auto px-6 max-w-5xl relative z-10">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="p-8 bg-white text-brand-darkTeal rounded-3xl shadow-[0_10px_0_rgba(0,0,0,0.1)] flex flex-col items-center justify-center text-center border-4 border-white"
-            >
-              <span className="text-gray-500 text-lg font-bold uppercase tracking-wider mb-2">Total Supply</span>
-              <span className="text-3xl sm:text-5xl font-black text-brand-teal">1,000,000,000</span>
-              <span className="text-xl font-bold mt-2">$PETS</span>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="p-8 bg-white text-brand-darkTeal rounded-3xl shadow-[0_10px_0_rgba(0,0,0,0.1)] flex flex-col items-center justify-center text-center border-4 border-white"
-            >
-              <span className="text-gray-500 text-lg font-bold uppercase tracking-wider mb-2">Taxes</span>
-              <span className="text-3xl sm:text-5xl font-black text-brand-orange">0/0</span>
-              <span className="text-xl font-bold mt-2">No Taxes</span>
-            </motion.div>
-
-             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-2 p-10 bg-brand-yellow rounded-3xl shadow-[0_10px_0_rgba(180,83,9,0.3)] flex flex-col items-center justify-center text-center transform hover:scale-[1.02] transition"
-            >
-              <span className="text-brand-darkTeal text-xl font-black uppercase tracking-wider mb-2">Current Market Cap</span>
-              <span className="text-5xl sm:text-7xl font-black text-white drop-shadow-[0_4px_0_rgba(0,0,0,0.1)]">~$60k</span>
-              <div className="mt-4 bg-white px-6 py-2 rounded-full">
-                  <span className="text-brand-teal font-black text-lg">💎 EARLY GEM</span>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* How To Buy */}
-      <section id="how-to-buy" className="py-24 z-10 relative">
-        <div className="container mx-auto px-6 max-w-4xl">
-           <motion.h2 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-4xl sm:text-6xl font-black mb-16 text-center text-white"
-           >
-             How to Buy
-           </motion.h2>
-
-           <div className="space-y-6">
-             {[
-               { step: "01", title: "Create a Wallet", desc: "Download Phantom or your preferred Solana wallet." },
-               { step: "02", title: "Get some SOL", desc: "Buy SOL from an exchange (Coinbase, Binance) and send it to your wallet." },
-               { step: "03", title: "Go to Anoncoin", desc: "Visit the PetsOnDoge page on Anoncoin.it." },
-               { step: "04", title: "Swap for $PETS", desc: "Connect your wallet and swap SOL for $PETS. Welcome to the family!" }
-             ].map((item, i) => (
-               <motion.div 
-                key={i}
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex items-center gap-6 p-6 bg-white/90 rounded-2xl border-4 border-transparent hover:border-brand-yellow transition group shadow-lg"
-               >
-                 <div className="flex-shrink-0 w-16 h-16 bg-brand-teal rounded-full flex items-center justify-center text-3xl font-black text-white shadow-inner">
-                    {item.step}
-                 </div>
-                 <div>
-                   <h3 className="text-2xl font-black mb-1 text-brand-darkTeal">{item.title}</h3>
-                   <p className="text-gray-600 font-medium">{item.desc}</p>
-                 </div>
-               </motion.div>
-             ))}
-           </div>
+                variants={fadeInUp}
+                className="bg-brand-teal rounded-[3rem] p-8 sm:p-16 border-[10px] border-white/10 shadow-2xl text-center"
+            >
+                <h2 className="text-4xl sm:text-6xl font-black mb-8 text-white drop-shadow-lg">
+                    Do Only <span className="text-brand-yellow">Good</span> Everyday
+                </h2>
+                <p className="text-xl sm:text-2xl font-medium leading-relaxed mb-12 text-white/90">
+                    We aren't just another meme coin. We are a <b className="text-brand-yellow">family</b>. 
+                    PetsOnDoge is inspired by the original Doge ethos, funding food, care, and adoptions for shelter pets worldwide.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                        { icon: Heart, title: "Charity", desc: "Donations to shelters" },
+                        { icon: Dog, title: "Community", desc: "Stronger together" },
+                        { icon: Shield, title: "Secure", desc: "Safe on Solana" },
+                    ].map((item, i) => (
+                        <div key={i} className="bg-white text-brand-darkTeal p-6 rounded-3xl border-b-8 border-gray-200 transform hover:-translate-y-2 transition-transform duration-300">
+                            <div className="bg-brand-teal/10 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-brand-darkTeal">
+                                <item.icon size={32} strokeWidth={3} />
+                            </div>
+                            <h3 className="text-2xl font-black mb-2">{item.title}</h3>
+                            <p className="font-bold opacity-70">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </motion.div>
         </div>
       </section>
 
-      {/* Roadmap */}
-      <section id="roadmap" className="py-24 relative z-10 bg-brand-darkTeal/30">
+      <WavyDivider className="text-[#166366] -mt-1 bg-brand-cream" flip />
+
+      {/* Tokenomics */}
+      <section id="tokenomics" className="bg-brand-cream py-24 text-brand-darkTeal">
         <div className="container mx-auto px-6 max-w-4xl">
-          <motion.h2 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-4xl sm:text-6xl font-black mb-16 text-center text-white"
-           >
-             Roadmap
-           </motion.h2>
+            <h2 className="text-5xl sm:text-7xl font-black text-center mb-16 drop-shadow-sm text-brand-darkTeal">
+                TOKENOMICS
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-brand-yellow p-10 rounded-[2.5rem] border-4 border-brand-darkTeal shadow-[10px_10px_0px_0px_rgba(22,99,102,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-default">
+                    <h3 className="text-2xl font-black uppercase tracking-widest opacity-80 mb-2">Total Supply</h3>
+                    <p className="text-4xl sm:text-6xl font-black">1 Billion</p>
+                    <p className="font-bold mt-2 text-xl">$PETS</p>
+                </div>
 
-           <div className="relative border-l-8 border-white/20 ml-4 md:ml-0 md:pl-0 space-y-16">
-             {[
-               { phase: "Phase 1", title: "Launch 🚀", items: ["Website Launch", "Community Building", "DEX Listing", "1000 Holders"] },
-               { phase: "Phase 2", title: "Growth 📈", items: ["Marketing Push", "Charity Partnerships", "CoinGecko Listing", "CEX Listings"] },
-               { phase: "Phase 3", title: "Expansion 🌍", items: ["Merchandise", "Doge DAO", "Global Charity Events", "To The Moon"] },
-             ].map((phase, i) => (
-               <motion.div 
-                 key={i}
-                 initial={{ opacity: 0, y: 30 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: i * 0.2 }}
-                 className="relative pl-12 md:pl-0 md:flex md:gap-16 md:items-start group"
-               >
-                 {/* Dot */}
-                 <div className="absolute left-[-11px] top-0 w-8 h-8 rounded-full bg-brand-yellow border-4 border-white shadow-lg md:hidden z-10" />
-                 
-                 <div className="md:w-1/3 md:text-right md:pr-16 md:border-r-8 md:border-white/20 md:relative">
-                    <div className="hidden md:block absolute -right-[20px] top-0 w-8 h-8 rounded-full bg-brand-yellow border-4 border-white shadow-lg z-10" />
-                    <h3 className="text-brand-yellow font-black text-2xl mb-2 uppercase tracking-wide">{phase.phase}</h3>
-                    <h4 className="text-white text-3xl font-black drop-shadow-md">{phase.title}</h4>
-                 </div>
-                 <div className="md:w-2/3 md:pl-0 pt-2 md:pt-0">
-                   <div className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/10 hover:bg-white/20 transition">
-                    <ul className="space-y-3">
-                        {phase.items.map((item, j) => (
-                        <li key={j} className="flex items-center gap-3 text-white font-bold text-lg">
-                            <Star size={16} className="text-brand-yellow fill-brand-yellow" />
-                            {item}
-                        </li>
-                        ))}
-                    </ul>
-                   </div>
-                 </div>
-               </motion.div>
-             ))}
-           </div>
+                <div className="bg-white p-10 rounded-[2.5rem] border-4 border-brand-darkTeal shadow-[10px_10px_0px_0px_rgba(22,99,102,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-default">
+                    <h3 className="text-2xl font-black uppercase tracking-widest opacity-80 mb-2">Tax</h3>
+                    <p className="text-4xl sm:text-6xl font-black text-brand-orange">0/0</p>
+                    <p className="font-bold mt-2 text-xl">No Buy/Sell Tax</p>
+                </div>
+            </div>
+            
+            <div className="mt-8 bg-brand-teal p-8 rounded-3xl border-4 border-brand-darkTeal text-center text-white shadow-[10px_10px_0px_0px_rgba(22,99,102,1)]">
+                <span className="text-2xl font-black uppercase">Current Market Cap</span>
+                <div className="text-6xl sm:text-8xl font-black my-4 text-brand-yellow drop-shadow-md">~$60k</div>
+                <span className="bg-white text-brand-darkTeal px-4 py-1 rounded-full font-black text-sm uppercase tracking-wider">Early Gem Alert 💎</span>
+            </div>
         </div>
       </section>
 
-      {/* Gallery */}
-      <section id="gallery" className="py-24 z-10 relative">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl sm:text-6xl font-black mb-12 text-white">Meme Gallery</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-             {[...Array(4)].map((_, i) => (
-               <motion.div 
-                key={i} 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className="aspect-square bg-white rounded-3xl border-4 border-brand-teal p-2 shadow-xl hover:scale-105 transition duration-300 rotate-1 hover:rotate-0"
-               >
-                  <div className="w-full h-full relative rounded-2xl overflow-hidden bg-gray-100">
-                    <Image src="/logo.jpg" alt="Meme" fill className="object-cover" />
-                  </div>
-               </motion.div>
-             ))}
-          </div>
-        </div>
+      <WavyDivider className="text-brand-cream bg-[#166366]" />
+
+      {/* How to Buy */}
+      <section id="how-to-buy" className="bg-[#166366] py-24 relative">
+         <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className="text-5xl sm:text-7xl font-black text-center mb-16 text-white drop-shadow-md">
+                HOW TO BUY
+            </h2>
+            
+            <div className="space-y-6">
+                {[
+                    { step: "1", text: "Create a Wallet (Phantom)" },
+                    { step: "2", text: "Get some SOL" },
+                    { step: "3", text: "Go to Anoncoin.it" },
+                    { step: "4", text: "Swap SOL for $PETS" },
+                ].map((item, i) => (
+                    <motion.div 
+                        key={i}
+                        initial={{ x: -50, opacity: 0 }}
+                        whileInView={{ x: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className="bg-white p-6 rounded-2xl flex items-center gap-6 border-l-[16px] border-brand-yellow shadow-lg"
+                    >
+                        <div className="bg-brand-darkTeal text-white w-12 h-12 rounded-full flex items-center justify-center font-black text-2xl flex-shrink-0">
+                            {item.step}
+                        </div>
+                        <p className="text-xl sm:text-2xl font-black text-brand-darkTeal">{item.text}</p>
+                    </motion.div>
+                ))}
+            </div>
+         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-16 border-t border-white/10 text-center bg-brand-darkTeal relative z-10">
+      <footer className="bg-brand-darkTeal text-white py-12 text-center border-t-8 border-brand-yellow">
         <div className="container mx-auto px-6">
-          <div className="flex justify-center items-center gap-6 mb-8">
-            <a href="#" className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-yellow hover:text-brand-darkTeal transition hover:-translate-y-1 shadow-lg">
-              <span className="sr-only">Twitter</span>
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </a>
-            <a href="#" className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-yellow hover:text-brand-darkTeal transition hover:-translate-y-1 shadow-lg">
-              <span className="sr-only">Telegram</span>
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-2.02-1.23-2.94-1.83-.42-.27-.76-.59.26-1.63.24-.24 4.4-4.22 4.48-4.57.01-.04.01-.2-.16-.29-.2-.09-.52-.06-.76.06-.35.17-5.5 3.65-5.91 3.93-.56.39-1.33.63-1.92.48-.54-.14-1.58-.45-2.27-.64-.85-.23-1.22-.36-1.16-.9.03-.27.38-.54 1.07-.82 4.19-1.83 7-3.03 8.39-3.6 3.99-1.63 4.82-1.92 5.37-1.93.12 0 .39.03.56.17.14.11.18.26.19.41 0 .15.01.29 0 .44z"/></svg>
-            </a>
-          </div>
-          <p className="text-white/60 text-sm mb-4 font-bold">© 2024 PetsOnDoge. All rights reserved.</p>
-          <p className="text-white/40 text-xs max-w-lg mx-auto font-medium">
-            Disclaimer: $PETS is a meme coin with no intrinsic value. 
-            The coin is completely useless and for entertainment purposes only.
-          </p>
+            <h2 className="text-4xl font-black mb-8 text-brand-yellow">PetsOnDoge</h2>
+            <div className="flex justify-center gap-6 mb-8">
+                <a href="#" className="bg-white/10 p-4 rounded-full hover:bg-brand-yellow hover:text-brand-darkTeal transition-all"><Zap /></a>
+                <a href="#" className="bg-white/10 p-4 rounded-full hover:bg-brand-yellow hover:text-brand-darkTeal transition-all"><Rocket /></a>
+            </div>
+            <p className="opacity-50 text-sm max-w-md mx-auto font-medium">
+                $PETS is a community meme coin for entertainment purposes only. No financial advice.
+            </p>
         </div>
       </footer>
+
     </main>
   );
 }
