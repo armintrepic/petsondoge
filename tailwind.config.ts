@@ -10,34 +10,29 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-inter)"],
-        display: ["var(--font-fredoka)"],
+        display: ["var(--font-space)"],
       },
       colors: {
-        brand: {
-          teal: '#208b8e',
-          darkTeal: '#166366',
-          yellow: '#FFD700',
-          orange: '#FF8C00',
-          cream: '#FFFDD0',
-        }
+        background: "#0A0A0A",
+        surface: "#121212",
+        primary: "#FACC15", // Yellow-400
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'noise': "url('/noise.png')", 
       },
       animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'wiggle': 'wiggle 1s ease-in-out infinite',
-        'marquee': 'marquee 25s linear infinite',
+        'fade-in': 'fadeIn 0.5s ease-out forwards',
+        'slide-up': 'slideUp 0.5s ease-out forwards',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-20px)' },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
-        wiggle: {
-          '0%, 100%': { transform: 'rotate(-3deg)' },
-          '50%': { transform: 'rotate(3deg)' },
-        },
-        marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         }
       }
     },

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Fredoka } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const fredoka = Fredoka({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-fredoka" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
 
 export const metadata: Metadata = {
-  title: "PetsOnDoge ($PETS) | Helping Shelter Pets",
-  description: "A Doge family crypto inspired by 'Do Only Good Everyday' ethos, funding food, care, and adoptions.",
+  title: "PetsOnDoge ($PETS) | The Future of Charity Crypto",
+  description: "A decentralized movement funding animal welfare through the Solana blockchain.",
 };
 
 export default function RootLayout({
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${fredoka.variable} font-sans bg-[#1a1a1a] text-white antialiased`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans bg-[#0A0A0A] text-white antialiased selection:bg-yellow-500/30 selection:text-yellow-200`}>
         {children}
       </body>
     </html>

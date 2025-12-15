@@ -1,61 +1,82 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { Copy, Check, Heart, Dog, Zap, Menu, X, Rocket, Shield, Star, Bone, PawPrint } from "lucide-react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Copy, Check, ArrowRight, ExternalLink, Globe, ShieldCheck, Users, Zap, Menu, X, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
 // --- Components ---
 
-const WavyDivider = ({ className, flip = false }: { className?: string; flip?: boolean }) => (
-  <div className={clsx("w-full leading-[0] z-20 relative", className)}>
-    <svg
-      viewBox="0 0 1200 120"
-      preserveAspectRatio="none"
-      className={clsx("relative block w-full h-[60px] sm:h-[100px]", flip ? "transform rotate-180" : "")}
+const Button = ({ children, variant = "primary", className, href, onClick, icon: Icon }: any) => {
+  const baseStyles = "px-6 py-3 rounded-full font-medium text-sm transition-all duration-300 flex items-center gap-2 group relative overflow-hidden";
+  const variants = {
+    primary: "bg-white text-black hover:bg-gray-100",
+    secondary: "bg-white/10 text-white hover:bg-white/20 backdrop-blur-md border border-white/10",
+    glow: "bg-yellow-400 text-black shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(250,204,21,0.5)] hover:bg-yellow-300"
+  };
+
+  const Component = href ? 'a' : 'button';
+  
+  return (
+    <Component 
+      href={href} 
+      onClick={onClick}
+      className={clsx(baseStyles, variants[variant as keyof typeof variants], className)}
     >
-      <path
-        d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-        className="fill-current"
-      ></path>
-    </svg>
-  </div>
-);
+      <span className="relative z-10 flex items-center gap-2">
+        {children}
+        {Icon && <Icon size={16} className="transition-transform group-hover:translate-x-1" />}
+      </span>
+    </Component>
+  );
+};
 
-const Marquee = () => (
-  <div className="bg-brand-yellow text-brand-darkTeal py-3 overflow-hidden border-y-4 border-brand-darkTeal relative z-30 transform -rotate-1">
-    <div className="whitespace-nowrap animate-marquee flex gap-8 items-center font-black text-xl uppercase tracking-widest">
-      {[...Array(10)].map((_, i) => (
-        <span key={i} className="flex items-center gap-4">
-          DO ONLY GOOD EVERYDAY <PawPrint size={20} /> $PETS <Bone size={20} />
-        </span>
-      ))}
-    </div>
-  </div>
-);
-
-const NavButton = ({ href, children, mobile = false, onClick }: any) => (
-  <a
-    href={href}
-    onClick={onClick}
-    className={clsx(
-      "font-black tracking-wide transition-all duration-300",
-      mobile
-        ? "text-2xl hover:text-brand-yellow"
-        : "text-lg text-white hover:text-brand-yellow hover:scale-110"
-    )}
+const Card = ({ title, value, subtext, className, delay = 0 }: any) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay, duration: 0.5 }}
+    className={clsx("glass-card p-8 flex flex-col justify-between h-full min-h-[200px]", className)}
   >
-    {children}
-  </a>
+    <div>
+      <h3 className="text-gray-400 text-sm uppercase tracking-wider font-mono mb-2">{title}</h3>
+      <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2 tracking-tight">{value}</div>
+    </div>
+    <div className="text-sm text-gray-500 font-medium">{subtext}</div>
+  </motion.div>
+);
+
+const Feature = ({ icon: Icon, title, desc, delay = 0 }: any) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay, duration: 0.5 }}
+    className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+  >
+    <div className="w-12 h-12 rounded-full bg-yellow-400/10 flex items-center justify-center text-yellow-400 mb-4">
+      <Icon size={24} />
+    </div>
+    <h3 className="text-xl font-display font-bold mb-2">{title}</h3>
+    <p className="text-gray-400 leading-relaxed text-sm">{desc}</p>
+  </motion.div>
 );
 
 // --- Main Page ---
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const CA = "HF9GHYi2a5fh9gCQLgzRg4PLyBnJTBs9uMhUXJvSdoge";
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(CA);
@@ -63,229 +84,237 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, type: "spring", bounce: 0.5 } }
-  };
-
   return (
-    <main className="min-h-screen bg-brand-teal text-white overflow-x-hidden font-display selection:bg-brand-yellow selection:text-black">
+    <main className="min-h-screen bg-[#0A0A0A] text-white overflow-hidden relative selection:bg-yellow-500/20">
+      <div className="bg-noise" />
       
+      {/* Abstract Background Orbs */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-20%] left-[20%] w-[600px] h-[600px] bg-yellow-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px]" />
+      </div>
+
       {/* Navbar */}
-      <nav className="fixed w-full z-50 px-4 py-4 top-0">
-        <div className="bg-brand-darkTeal/90 backdrop-blur-md rounded-full border-4 border-white/20 shadow-xl container mx-auto px-6 py-3 flex justify-between items-center max-w-6xl">
-          <div className="flex items-center gap-2">
-            <div className="bg-brand-yellow p-1.5 rounded-full border-2 border-white shadow-sm">
-                <span className="text-2xl">🐶</span>
+      <nav className={clsx("fixed w-full z-50 transition-all duration-300", scrolled ? "py-4 bg-[#0A0A0A]/80 backdrop-blur-lg border-b border-white/5" : "py-6 bg-transparent")}>
+        <div className="container mx-auto px-6 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                <Image src="/logo.jpg" alt="Logo" fill className="object-cover" />
             </div>
-            <span className="text-2xl font-black tracking-tight text-white drop-shadow-md">PetsOnDoge</span>
+            <span className="font-display font-bold text-xl tracking-tight">PetsOnDoge</span>
           </div>
 
-          <div className="hidden md:flex gap-8 items-center">
-            <NavButton href="#about">About</NavButton>
-            <NavButton href="#tokenomics">Tokenomics</NavButton>
-            <NavButton href="#how-to-buy">How to Buy</NavButton>
-            <a href="https://anoncoin.it/pets" target="_blank" className="bg-brand-yellow text-brand-darkTeal px-6 py-2.5 rounded-full font-black border-b-4 border-brand-orange hover:border-b-0 hover:translate-y-1 transition-all shadow-lg hover:shadow-md">
-              BUY NOW
-            </a>
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+            <a href="#about" className="hover:text-white transition-colors">Mission</a>
+            <a href="#tokenomics" className="hover:text-white transition-colors">Protocol</a>
+            <a href="#roadmap" className="hover:text-white transition-colors">Roadmap</a>
+            <Button href="https://anoncoin.it/pets" variant="glow" icon={ArrowRight}>Trade Now</Button>
           </div>
 
           <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {mobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-brand-teal pt-24 px-6 flex flex-col gap-8 items-center md:hidden"
-          >
-            <NavButton mobile href="#about" onClick={() => setMobileMenuOpen(false)}>About</NavButton>
-            <NavButton mobile href="#tokenomics" onClick={() => setMobileMenuOpen(false)}>Tokenomics</NavButton>
-            <NavButton mobile href="#how-to-buy" onClick={() => setMobileMenuOpen(false)}>How to Buy</NavButton>
-            <a href="https://anoncoin.it/pets" className="bg-brand-yellow text-brand-darkTeal w-full py-4 rounded-xl font-black text-center text-xl shadow-xl">BUY NOW</a>
-          </motion.div>
+           <motion.div 
+             initial={{ opacity: 0, y: -20 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -20 }}
+             className="fixed inset-0 z-40 bg-black/95 pt-24 px-6 md:hidden"
+           >
+             <div className="flex flex-col gap-6 text-2xl font-display font-bold">
+               <a href="#about" onClick={() => setMobileMenuOpen(false)}>Mission</a>
+               <a href="#tokenomics" onClick={() => setMobileMenuOpen(false)}>Protocol</a>
+               <a href="#roadmap" onClick={() => setMobileMenuOpen(false)}>Roadmap</a>
+               <Button href="https://anoncoin.it/pets" variant="glow" className="justify-center mt-4">Trade Now</Button>
+             </div>
+           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Hero Section */}
-      <header className="relative pt-40 pb-32 px-6 flex flex-col items-center text-center overflow-hidden bg-brand-teal">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="absolute top-20 left-10 text-white animate-bounce duration-[3s]"><Bone size={60} /></div>
-            <div className="absolute bottom-40 right-20 text-brand-yellow animate-bounce duration-[4s] delay-100"><PawPrint size={80} /></div>
-        </div>
-
-        <motion.div 
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="relative w-64 h-64 sm:w-80 sm:h-80 mb-6 z-10"
+      <section className="relative pt-40 pb-20 px-6 z-10 min-h-[90vh] flex flex-col justify-center items-center text-center">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-yellow-400 mb-8"
         >
-            <div className="absolute inset-0 bg-brand-yellow rounded-full scale-110 border-8 border-white/30 animate-pulse" />
-            <Image src="/logo.jpg" alt="Logo" fill className="object-cover rounded-full border-[12px] border-white shadow-2xl relative z-10" priority />
-            <div className="absolute -bottom-6 -right-6 bg-brand-orange text-white px-6 py-2 rounded-full font-black text-xl border-4 border-white shadow-lg rotate-12 z-20">
-                Hi! 👋
-            </div>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+            </span>
+            Live on Solana
         </motion.div>
 
         <motion.h1 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-6xl sm:text-9xl font-black text-brand-yellow drop-shadow-[0_8px_0_rgba(22,99,102,1)] tracking-tight relative z-10 stroke-text"
-            style={{ WebkitTextStroke: "3px #166366" }}
-        >
-            PetsOnDoge
-        </motion.h1>
-        
-        <motion.p 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-2xl sm:text-4xl font-bold text-white mt-4 mb-10 max-w-3xl drop-shadow-md"
+            className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-6 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent max-w-4xl"
         >
-            The <span className="text-brand-yellow underline decoration-wavy decoration-4">goodest</span> coin on Solana. 
-            Helping shelter pets find homes! 🏡
+            The Future of <br/> Charity Crypto
+        </motion.h1>
+
+        <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-lg md:text-xl text-gray-400 max-w-xl mb-10 leading-relaxed"
+        >
+            PetsOnDoge leverages the efficiency of Solana to fund animal welfare worldwide. 
+            Transparent. Community-driven. Impactful.
         </motion.p>
 
         <motion.div 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 w-full justify-center z-10"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 items-center"
         >
-            <div onClick={copyToClipboard} className="cursor-pointer bg-white text-brand-darkTeal px-6 py-4 rounded-2xl font-mono font-bold border-b-8 border-gray-200 active:border-b-0 active:translate-y-2 transition-all flex items-center gap-3 shadow-xl group">
-                <span className="text-sm sm:text-base">{CA.slice(0, 6)}...{CA.slice(-6)}</span>
-                <div className="bg-brand-teal/10 p-2 rounded-lg group-hover:bg-brand-yellow transition-colors">
-                    {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
-                </div>
+            <div onClick={copyToClipboard} className="cursor-pointer group flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                <code className="font-mono text-gray-300 text-sm">{CA.slice(0, 4)}...{CA.slice(-4)}</code>
+                {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} className="text-gray-500 group-hover:text-white" />}
             </div>
-            
-            <a href="https://anoncoin.it/pets" target="_blank" className="bg-brand-orange text-white px-8 py-4 rounded-2xl font-black text-xl border-b-8 border-[#c25e00] active:border-b-0 active:translate-y-2 transition-all shadow-xl flex items-center justify-center gap-2 hover:brightness-110">
-                <Rocket size={24} /> BUY NOW
-            </a>
+            <div className="flex gap-3">
+                <Button href="https://anoncoin.it/pets" variant="glow" icon={Zap}>Buy $PETS</Button>
+                <Button href="https://dexscreener.com/solana/HF9GHYi2a5fh9gCQLgzRg4PLyBnJTBs9uMhUXJvSdoge" variant="secondary" icon={ExternalLink}>Chart</Button>
+            </div>
         </motion.div>
-      </header>
+      </section>
 
-      <Marquee />
+      {/* Stats Grid (Bento) */}
+      <section id="tokenomics" className="py-24 px-6 relative z-10">
+        <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[200px]">
+                {/* Market Cap */}
+                <Card 
+                    title="Market Cap" 
+                    value="~$60k" 
+                    subtext="Undervalued Gem" 
+                    className="md:col-span-2 bg-gradient-to-br from-white/5 to-white/0"
+                    delay={0.1}
+                />
+                
+                {/* Supply */}
+                <Card 
+                    title="Total Supply" 
+                    value="1B" 
+                    subtext="Fixed Supply"
+                    delay={0.2} 
+                />
 
-      {/* About Section */}
-      <section id="about" className="relative bg-[#166366] py-24">
-        <div className="container mx-auto px-6 max-w-5xl relative z-10">
-            <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="bg-brand-teal rounded-[3rem] p-8 sm:p-16 border-[10px] border-white/10 shadow-2xl text-center"
-            >
-                <h2 className="text-4xl sm:text-6xl font-black mb-8 text-white drop-shadow-lg">
-                    Do Only <span className="text-brand-yellow">Good</span> Everyday
-                </h2>
-                <p className="text-xl sm:text-2xl font-medium leading-relaxed mb-12 text-white/90">
-                    We aren't just another meme coin. We are a <b className="text-brand-yellow">family</b>. 
-                    PetsOnDoge is inspired by the original Doge ethos, funding food, care, and adoptions for shelter pets worldwide.
-                </p>
+                {/* Tax */}
+                <Card 
+                    title="Tax Protocol" 
+                    value="0%" 
+                    subtext="Buy / Sell" 
+                    className="bg-yellow-500/10 border-yellow-500/20"
+                    delay={0.3}
+                />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {[
-                        { icon: Heart, title: "Charity", desc: "Donations to shelters" },
-                        { icon: Dog, title: "Community", desc: "Stronger together" },
-                        { icon: Shield, title: "Secure", desc: "Safe on Solana" },
-                    ].map((item, i) => (
-                        <div key={i} className="bg-white text-brand-darkTeal p-6 rounded-3xl border-b-8 border-gray-200 transform hover:-translate-y-2 transition-transform duration-300">
-                            <div className="bg-brand-teal/10 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-brand-darkTeal">
-                                <item.icon size={32} strokeWidth={3} />
+                {/* Holders */}
+                <div className="md:col-span-2 glass-card p-8 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-gray-400 text-sm uppercase tracking-wider font-mono mb-2">Community</h3>
+                        <div className="text-3xl font-display font-bold text-white">Growing Fast</div>
+                        <p className="text-gray-500 mt-2">Join the revolution</p>
+                    </div>
+                    <div className="flex -space-x-4">
+                        {[...Array(4)].map((_, i) => (
+                            <div key={i} className="w-12 h-12 rounded-full border-2 border-[#121212] bg-white/10 flex items-center justify-center text-xs backdrop-blur-md">
+                                <Users size={16} />
                             </div>
-                            <h3 className="text-2xl font-black mb-2">{item.title}</h3>
-                            <p className="font-bold opacity-70">{item.desc}</p>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </motion.div>
-        </div>
-      </section>
-
-      <WavyDivider className="text-[#166366] -mt-1 bg-brand-cream" flip />
-
-      {/* Tokenomics */}
-      <section id="tokenomics" className="bg-brand-cream py-24 text-brand-darkTeal">
-        <div className="container mx-auto px-6 max-w-4xl">
-            <h2 className="text-5xl sm:text-7xl font-black text-center mb-16 drop-shadow-sm text-brand-darkTeal">
-                TOKENOMICS
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-brand-yellow p-10 rounded-[2.5rem] border-4 border-brand-darkTeal shadow-[10px_10px_0px_0px_rgba(22,99,102,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-default">
-                    <h3 className="text-2xl font-black uppercase tracking-widest opacity-80 mb-2">Total Supply</h3>
-                    <p className="text-4xl sm:text-6xl font-black">1 Billion</p>
-                    <p className="font-bold mt-2 text-xl">$PETS</p>
-                </div>
-
-                <div className="bg-white p-10 rounded-[2.5rem] border-4 border-brand-darkTeal shadow-[10px_10px_0px_0px_rgba(22,99,102,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-default">
-                    <h3 className="text-2xl font-black uppercase tracking-widest opacity-80 mb-2">Tax</h3>
-                    <p className="text-4xl sm:text-6xl font-black text-brand-orange">0/0</p>
-                    <p className="font-bold mt-2 text-xl">No Buy/Sell Tax</p>
-                </div>
-            </div>
-            
-            <div className="mt-8 bg-brand-teal p-8 rounded-3xl border-4 border-brand-darkTeal text-center text-white shadow-[10px_10px_0px_0px_rgba(22,99,102,1)]">
-                <span className="text-2xl font-black uppercase">Current Market Cap</span>
-                <div className="text-6xl sm:text-8xl font-black my-4 text-brand-yellow drop-shadow-md">~$60k</div>
-                <span className="bg-white text-brand-darkTeal px-4 py-1 rounded-full font-black text-sm uppercase tracking-wider">Early Gem Alert 💎</span>
             </div>
         </div>
       </section>
 
-      <WavyDivider className="text-brand-cream bg-[#166366]" />
+      {/* Mission / About */}
+      <section id="about" className="py-24 px-6 relative z-10 border-t border-white/5 bg-white/[0.02]">
+        <div className="container mx-auto max-w-4xl">
+            <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">Built for Impact</h2>
+                <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto">
+                    We believe crypto can be a force for good. By harnessing the meme economy, 
+                    we channel liquidity into real-world aid for animal shelters.
+                </p>
+            </div>
 
-      {/* How to Buy */}
-      <section id="how-to-buy" className="bg-[#166366] py-24 relative">
-         <div className="container mx-auto px-6 max-w-4xl">
-            <h2 className="text-5xl sm:text-7xl font-black text-center mb-16 text-white drop-shadow-md">
-                HOW TO BUY
-            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <Feature 
+                    icon={Globe} 
+                    title="Global Reach" 
+                    desc="Partnering with shelters across continents to provide food and medical supplies."
+                    delay={0.1} 
+                />
+                <Feature 
+                    icon={ShieldCheck} 
+                    title="Transparency" 
+                    desc="Blockchain verifiable donations. Every transaction is traceable on-chain." 
+                    delay={0.2} 
+                />
+                <Feature 
+                    icon={Users} 
+                    title="DAO Governance" 
+                    desc="Community votes on which shelters to support next. You decide the impact." 
+                    delay={0.3} 
+                />
+            </div>
+        </div>
+      </section>
+
+      {/* Roadmap */}
+      <section id="roadmap" className="py-24 px-6 relative z-10">
+        <div className="container mx-auto max-w-4xl">
+            <h2 className="text-3xl md:text-5xl font-display font-bold mb-16 text-center">Roadmap</h2>
             
-            <div className="space-y-6">
+            <div className="space-y-4">
                 {[
-                    { step: "1", text: "Create a Wallet (Phantom)" },
-                    { step: "2", text: "Get some SOL" },
-                    { step: "3", text: "Go to Anoncoin.it" },
-                    { step: "4", text: "Swap SOL for $PETS" },
+                    { phase: "01", title: "Foundation", items: "Contract Deploy, Website Launch, Initial Liquidity" },
+                    { phase: "02", title: "Growth", items: "Community Expansion, First Charity Drop, CMC Listing" },
+                    { phase: "03", title: "Scale", items: "CEX Listings, Global Partnerships, DAO Implementation" }
                 ].map((item, i) => (
                     <motion.div 
                         key={i}
-                        initial={{ x: -50, opacity: 0 }}
-                        whileInView={{ x: 0, opacity: 1 }}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.1 }}
-                        className="bg-white p-6 rounded-2xl flex items-center gap-6 border-l-[16px] border-brand-yellow shadow-lg"
+                        className="group flex items-center justify-between p-6 md:p-8 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/[0.07] transition-all cursor-default"
                     >
-                        <div className="bg-brand-darkTeal text-white w-12 h-12 rounded-full flex items-center justify-center font-black text-2xl flex-shrink-0">
-                            {item.step}
+                        <div className="flex items-center gap-6">
+                            <span className="text-4xl font-display font-bold text-white/10 group-hover:text-yellow-400/20 transition-colors">{item.phase}</span>
+                            <div>
+                                <h3 className="text-xl font-bold mb-1">{item.title}</h3>
+                                <p className="text-gray-500 text-sm">{item.items}</p>
+                            </div>
                         </div>
-                        <p className="text-xl sm:text-2xl font-black text-brand-darkTeal">{item.text}</p>
+                        <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:bg-yellow-400 group-hover:text-black group-hover:border-yellow-400 transition-all">
+                            <ChevronRight size={16} />
+                        </div>
                     </motion.div>
                 ))}
             </div>
-         </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-brand-darkTeal text-white py-12 text-center border-t-8 border-brand-yellow">
-        <div className="container mx-auto px-6">
-            <h2 className="text-4xl font-black mb-8 text-brand-yellow">PetsOnDoge</h2>
-            <div className="flex justify-center gap-6 mb-8">
-                <a href="#" className="bg-white/10 p-4 rounded-full hover:bg-brand-yellow hover:text-brand-darkTeal transition-all"><Zap /></a>
-                <a href="#" className="bg-white/10 p-4 rounded-full hover:bg-brand-yellow hover:text-brand-darkTeal transition-all"><Rocket /></a>
+      <footer className="py-12 border-t border-white/5 bg-black z-10 relative">
+        <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-sm text-gray-500">
+                © 2024 PetsOnDoge Foundation.
             </div>
-            <p className="opacity-50 text-sm max-w-md mx-auto font-medium">
-                $PETS is a community meme coin for entertainment purposes only. No financial advice.
-            </p>
+            <div className="flex gap-6">
+                <a href="#" className="text-gray-500 hover:text-white transition-colors">Twitter</a>
+                <a href="#" className="text-gray-500 hover:text-white transition-colors">Telegram</a>
+                <a href="#" className="text-gray-500 hover:text-white transition-colors">Etherscan</a>
+            </div>
         </div>
       </footer>
 
