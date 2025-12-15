@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Copy, Check, ExternalLink, Heart, Dog, Zap, Menu, X, Rocket, Shield, Star } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -16,12 +16,12 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const fadeInUp = {
+  const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, type: "spring", bounce: 0.4 } }
   };
 
-  const staggerContainer = {
+  const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
