@@ -13,26 +13,26 @@ const config: Config = {
         display: ["var(--font-space)"],
       },
       colors: {
-        background: "#0A0A0A",
-        surface: "#121212",
-        primary: "#FACC15", // Yellow-400
-      },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'noise': "url('/noise.png')", 
+        brand: {
+          teal: "#166366",
+          darkTeal: "#0d3d3f",
+          yellow: "#facc15",
+          orange: "#f97316",
+          cream: "#fefce8",
+        }
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'slide-up': 'slideUp 0.5s ease-out forwards',
+        'marquee': 'marquee 25s linear infinite',
+        'float': 'float 6s ease-in-out infinite',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
         }
       }
     },
